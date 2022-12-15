@@ -78,6 +78,26 @@ class Query(Option):
         print(item)
     return("There were {} items that matched by tag, {} items that matched by task,{} items that matched by date",(len(matchTag),len(matchTask),len(matchDate)))
 
+
+class Report(Option):
+  dataservice = DataService()
+  def execute(self,argument):
+    print("Attempting to serach in ragne:", argument[0],argument[1])
+    if(len(argument)!=2):
+      print("Invalid input, use:\nreport [<DATE>] [<DATE>]")
+      return "ERROR"
+    match = self.dataservice.getByDateFromTo(argument[0],argument[1])
+    if(len(match)==0):
+      print("No items with matching tag")
+    for item in match:
+      print(item)
+    return "There were {} items that matched by tag".format(len(match))
+
+   
+
+
+
+
 class List(Option):
   dataservice = DataService()
   def execute(self,argument):
@@ -96,6 +116,24 @@ class List(Option):
         print("DATE:{}, TASK:{}".format(item.DATE, item.TASK))
     return "Returned {} items".format(len(all))
 
+class Priority(Option):
+  dataservice = DataService()
+  def execute(self,argument):
+    all= self.dataservice.getAllItems()
+    if (len(argument)==0):
+      print("Invalid input, use:\nPriority: priority [number of tasks]")
+      return "ERROR"
+    match = self.dataservice.getPrioTask()
+    if (len(match)==0):
+      return "No items"
+    for i in range(int(argument[0])):
+      if i == len(match): 
+        return "Returned {} items".format(i)
+      item = match[i]
+      print("PRIORITY #{} TASK:{}, TAG:{}".format(i+1,item.TASK,item.TAG))
+    return "Returned {} items".format(argument[0])
+
+
 
 
 class Context(object):
@@ -112,6 +150,11 @@ class Context(object):
       self.set_option(Delete())
     elif input == "list":
       self.set_option(List())
+    elif input == "report":
+      self.set_option(Report())
+
+    elif input == "priority":
+      self.set_option(Priority())
     else:
       self.set_option(Invalid())
     return self.option.execute(argument)
@@ -122,7 +165,7 @@ def run():
   context = Context()
   print("TO DO APP/////////////////////////////////////////")
   print("Available command:")
-  print("To record time:\nrecord [<Date>] [<FROM>] [<TO>] [<TASK>] [<TAG>]\nTo query records:query [<DATE> <TASK> <TAG>]\nTO delete an item: delete [<ID>]\nTO list all items: list [detail/simple]")
+  print("To record time:\nrecord [<Date>] [<FROM>] [<TO>] [<TASK>] [<TAG>]\nTo query records:query [<DATE> <TASK> <TAG>]\nTO delete an item: delete [<ID>]\nTO list all items: list [detail/simple]\nReport from date to date: report [from] [to]\nPriority: priority [number of tasks]")
   while(True):
     record = str(input("Enter command (or press q):"))
     if(record =="q"): 

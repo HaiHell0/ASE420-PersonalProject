@@ -1,8 +1,8 @@
 import sqlite3
 from todoitem import Todoitem
 connection = sqlite3.connect('mydatabase.db')
-
-
+""" cursor = connection.cursor()
+cursor.execute("DROP TABLE todolist") """
 class DataService:
     def __init__(self):
         self.connection = sqlite3.connect('mydatabase.db')
@@ -44,7 +44,9 @@ class DataService:
             self.connection.commit()
             return True
         
-
+    def getPrioTask(self):
+        self.cursor.execute("select * FROM todolist GROUP BY task,tag ORDER BY COUNT(*) DESC")
+        return self._toToDoArray(self.cursor.fetchall())
     
     def getByDate(self,value):
         self.cursor.execute("SELECT * FROM todolist where date = :value",{'value':value})
@@ -58,12 +60,19 @@ class DataService:
         self.cursor.execute("SELECT * FROM todolist where tag = :value",{'value':value})
         return self._toToDoArray(self.cursor.fetchall())
 
+    def getByDateFromTo(self, start, end):
+        self.cursor.execute("SELECT * FROM todolist where date BETWEEN :start AND :end",{'start':start,'end':end})
+        return self._toToDoArray(self.cursor.fetchall())
+
 
    
     def getAllItems(self):
         self.cursor.execute("SELECT * FROM todolist")
         return self._toToDoArray(self.cursor.fetchall())
 
+    def drop(self):
+        self.cursor.execute("DROP TABLE todolist")
+        connection.commit()
     def __del__(self):
         self.connection.close()
 
