@@ -1,6 +1,7 @@
 from todoitem import Todoitem
 from sqlite import DataService
 from adapter import Adapter
+import argparse
 
 
 class Option(object):
@@ -166,17 +167,28 @@ def run():
   print("TO DO APP/////////////////////////////////////////")
   print("Available command:")
   print("To record time:\nrecord [<Date>] [<FROM>] [<TO>] [<TASK>] [<TAG>]\nTo query records:query [<DATE> <TASK> <TAG>]\nTO delete an item: delete [<ID>]\nTO list all items: list [detail/simple]\nReport from date to date: report [from] [to]\nPriority: priority [number of tasks]")
-  while(True):
+  """ while(True):
     record = str(input("Enter command (or press q):"))
     if(record =="q"): 
       break
     recordList = record.split(" ")
     command =  recordList[0]
     recordList.pop(0)
-    print("Command returned result of:",context.make_decision(command,recordList))
+    print("Command returned result of:",context.make_decision(command,recordList)) """
+  
 
 
 
 
 if __name__ == "__main__":
-  run()
+  print("TO DO APP/////////////////////////////////////////")
+  #print("To record time:\nrecord [<Date>] [<FROM>] [<TO>] [<TASK>] [<TAG>]\nTo query records:query [<DATE> <TASK> <TAG>]\nTO delete an item: delete [<ID>]\nTO list all items: list [detail/simple]\nReport from date to date: report [from] [to]\nPriority: priority [number of tasks]\n\n")
+  parser = argparse.ArgumentParser()
+  context = Context()
+  parser.add_argument('operation', help ="Available options for operations: record, query, delete, list, report, priority")
+  parser.add_argument('arguments', help ="Enter the arguments")
+  args = parser.parse_args()
+  #print(args.operation, [args.arguments])
+ 
+  result = context.make_decision(args.operation,[args.arguments])
+  print(result)
