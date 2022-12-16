@@ -70,14 +70,14 @@ class Query(Option):
       print("Found items with that task:")
       for item in matchTag:
         print(item)
-    matchDate = self.dataservice.getByTag(argument[0])
+    matchDate = self.dataservice.getByDate(argument[0])
     if(len(matchDate)==0):
       print("No items with matching date")
     else:
       print("Found items with that date:")
       for item in matchDate:
         print(item)
-    return("There were {} items that matched by tag, {} items that matched by task,{} items that matched by date",(len(matchTag),len(matchTask),len(matchDate)))
+    return("There were {} items that matched by tag, {} items that matched by task,{} items that matched by date".format(len(matchTag),len(matchTask),len(matchDate)))
 
 
 class Report(Option):
