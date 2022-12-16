@@ -83,10 +83,12 @@ class Query(Option):
 class Report(Option):
   dataservice = DataService()
   def execute(self,argument):
-    print("Attempting to serach in ragne:", argument[0],argument[1])
+   
     if(len(argument)!=2):
       print("Invalid input, use:\nreport [<DATE>] [<DATE>]")
       return "ERROR"
+
+    print("Attempting to serach in range:", argument[0],argument[1])
     match = self.dataservice.getByDateFromTo(argument[0],argument[1])
     if(len(match)==0):
       print("No items with matching tag")
@@ -186,9 +188,9 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   context = Context()
   parser.add_argument('operation', help ="Available options for operations: record, query, delete, list, report, priority")
-  parser.add_argument('arguments', help ="Enter the arguments")
+  parser.add_argument('arguments', nargs='+', help='<Required> Pass Arguments')
   args = parser.parse_args()
   #print(args.operation, [args.arguments])
  
-  result = context.make_decision(args.operation,[args.arguments])
+  result = context.make_decision(args.operation,args.arguments)
   print(result)
